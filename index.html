@@ -26,6 +26,9 @@
     overflow-y:auto; display:flex; flex-direction:column; justify-content:center;
     padding:100px 28px 56px; position:relative;
   }
+  @media (max-width:640px){
+    .slide{ padding:80px 20px 36px; justify-content:flex-start; }
+  }
   .wrap{ max-width:1120px; margin:0 auto; width:100%; }
   .eyebrow{
     font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
@@ -160,6 +163,13 @@
   .cmp-cell.old{ background:#150c0c; color:#c98a8a; }
   .cmp-cell.new{ background:#0a1e14; color:#7ACF9A; }
   .cmp-cell.new::before{ content:'✅ '; }
+  .cmp-cell.old::before{ content:'⛔ '; }
+  @media (max-width:700px){
+    .cmp-row{ grid-template-columns:1fr; }
+    .cmp-row.head{ display:none; }
+    .cmp-cell{ padding:9px 14px; font-size:12.5px; }
+    .cmp-cell.dim{ font-weight:700; padding-bottom:4px; }
+  }
 
   /* ===================== PRODUCT MOCKUP ===================== */
   .mock-grid{ display:grid; grid-template-columns:230px 1fr; gap:32px; align-items:start; margin-top:24px; }
@@ -257,6 +267,10 @@
   .rp-box.proactive .rp-title{ color:var(--green); }
   .rp-box p{ font-size:12px; color:var(--ice); }
   .rp-arrow{ display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--green); padding:0 12px; flex-shrink:0; }
+  @media (max-width:700px){
+    .rp-row{ flex-direction:column; gap:10px; }
+    .rp-arrow{ transform:rotate(90deg); padding:2px 0; }
+  }
   .rp-groups{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; }
   @media (max-width:780px){ .rp-groups{ grid-template-columns:1fr; } }
   .rp-group{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:13px 16px; }

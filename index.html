@@ -667,23 +667,6 @@
     </div>
   </section>
 
-  <section class="slide" id="scale" style="background:var(--dark)" data-label="ขนาดการใช้งาน">
-    <div class="wrap">
-      <div class="eyebrow" data-key="scale.eyebrow"></div>
-      <h2 data-key="scale.heading"></h2>
-      <div class="scale-top fade-up">
-        <div>
-          <div class="big-stat" data-key="scale.bigStat"></div>
-          <div class="big-stat-label" data-key="scale.bigStatLabel"></div>
-        </div>
-        <div class="branch-chips" id="scale-branches"></div>
-      </div>
-      <div class="eyebrow" data-key="scale.metricsEyebrow" style="margin-top:6px"></div>
-      <div class="metric-grid fade-up" id="scale-metrics"></div>
-      <p class="note" data-key="scale.note"></p>
-    </div>
-  </section>
-
   <section class="slide" id="reactive" data-label="Proactive Org">
     <div class="wrap">
       <div class="eyebrow" data-key="reactive.eyebrow"></div>
@@ -720,14 +703,6 @@
         </div>
       </div>
       <div class="callout callout-purple fade-up" data-key="roi.banner" style="margin-top:18px; justify-content:center; text-align:center;"></div>
-    </div>
-  </section>
-
-  <section class="slide" id="roadmap" data-label="ก้าวถัดไป">
-    <div class="wrap">
-      <div class="eyebrow" data-key="roadmap.eyebrow"></div>
-      <h2 data-key="roadmap.heading"></h2>
-      <div class="road-list fade-up" id="roadmap-items"></div>
     </div>
   </section>
 
@@ -803,17 +778,8 @@
     `<div class="check-row"><span class="cr-label">${r.label}</span><span class="cr-value">${r.value}</span></div>`
   ).join('');
 
-  document.getElementById('scale-branches').innerHTML = DATA.scale.branches.map(b=>`<div class="chip">${b}</div>`).join('');
-  document.getElementById('scale-metrics').innerHTML = DATA.scale.metrics.map(m=>
-    `<div class="metric-slot"><div class="m-label">${m.label}</div><div class="m-value">${m.value}</div></div>`
-  ).join('');
-
   document.getElementById('rp-groups').innerHTML = DATA.reactive.groups.map(g=>
     `<div class="rp-group"><h4>${g.title}</h4><p>${g.body}</p></div>`
-  ).join('');
-
-  document.getElementById('roadmap-items').innerHTML = DATA.roadmap.items.map(it=>
-    `<div class="road-item"><div class="road-dot"></div><div><h4>${it.title}</h4><p>${it.body}</p></div></div>`
   ).join('');
 
   document.getElementById('contact-cards').innerHTML = DATA.contact.cards.map(c=>

@@ -20,19 +20,14 @@
   ::selection{ background:var(--green); color:#001a08; }
 
   /* =====================================================================
-     MOBILE-ONLY PAGE — ไม่มีโหมดเดสก์ท็อป/16:9 อีกต่อไป
+     MOBILE-ONLY SLIDE ENGINE — เลื่อนทีละแผ่นเต็มจอ ไม่มีโหมดเดสก์ท็อป/16:9
      เพราะเปลี่ยนไปนำเสนอด้วย PPT แทน เว็บนี้ใช้แค่เปิดดูบนมือถือ
-     หลักการจัดวาง: (1) หัวข้อของทุกสไลด์อยู่ด้านบนเสมอ ไม่จัดกึ่งกลาง
-     (2) แต่ละหัวข้อสูงเท่าที่เนื้อหาต้องการจริง ไม่บังคับให้เต็ม 1 จอเสมอไป
-     — นี่คือจุดที่แก้ทั้งปัญหา "เนื้อหาน้อยแล้วมีที่ว่างเหลือเยอะ" และ
-     "เนื้อหาเยอะจนล้นจอ" พร้อมกัน เพราะทั้งสองเกิดจากสาเหตุเดียวกันคือ
-     การบังคับความสูงคงที่ 100vh ต่อสไลด์ (ของเดิม)
-     (3) ยังคง "เลื่อนแล้วสแนปเข้าหัวข้อถัดไปพอดี" ไว้เหมือนเดิม
+     หัวข้อของทุกสไลด์อยู่ด้านบนเสมอ ไม่จัดกึ่งกลาง
      ===================================================================== */
-  #slides{ height:100vh; height:100dvh; overflow-y:scroll; scroll-snap-type:y proximity; }
+  #slides{ height:100vh; height:100dvh; overflow-y:scroll; scroll-snap-type:y mandatory; }
   .slide{
-    scroll-snap-align:start;
-    display:flex; flex-direction:column; justify-content:flex-start;
+    height:100vh; height:100dvh; scroll-snap-align:start; scroll-snap-stop:always;
+    overflow-y:auto; display:flex; flex-direction:column; justify-content:flex-start;
     padding:68px 20px 40px; position:relative;
   }
   .wrap{ max-width:520px; margin:0 auto; width:100%; }
@@ -351,32 +346,6 @@
     "linkLabel": "🔗 เปิดดูใน YouTube"
   },
 
-  "creditsOffset": {
-    "eyebrow": "นวัตกรรมเชิงพฤติกรรม",
-    "heading": "กลไก Safety Credits Offset",
-    "lead": "เปลี่ยนความผิดพลาดให้เป็นการสร้างคุณค่า ด้วย Incentive Design",
-    "tiers": [
-      { "level": "Low Risk", "tone": "green", "credit": "+20 แต้ม", "note": "ความเสี่ยงต่ำ" },
-      { "level": "Medium Risk", "tone": "amber", "credit": "+50 แต้ม", "note": "พร้อมข้อเสนอแนะ" },
-      { "level": "High Risk", "tone": "red", "credit": "+100 แต้ม", "note": "ป้องกันอุบัติเหตุใหญ่" }
-    ],
-    "banner": "สะสมครบ 300 Credits หักล้างผลกระทบใบเตือนได้ 1 ใบ หรือสะสมคะแนนรับรางวัลประจำปี"
-  },
-
-  "reactive": {
-    "eyebrow": "ผลลัพธ์เชิงวัฒนธรรม",
-    "heading": "สู่การเป็น Proactive Organization",
-    "reactiveTitle": "Reactive (เชิงรับ)",
-    "reactiveBody": "รอรับรายงาน / ปกปิดข้อมูล / เน้นลงโทษ",
-    "proactiveTitle": "Proactive (เชิงรุก)",
-    "proactiveBody": "มองหาและรายงานความเสี่ยง / จป. ทำงานเชิงป้องกัน",
-    "groups": [
-      { "title": "พนักงาน", "body": "เปลี่ยนจาก 'ซ่อน' เป็น 'รายงาน' ด้วยแรงจูงใจเชิงบวก รู้สึกได้รับโอกาส" },
-      { "title": "เจ้าหน้าที่ความปลอดภัย (จป.)", "body": "โฟกัสเฉพาะ High Risk Cases ที่ AI คัดกรองให้ (Pre-screen)" },
-      { "title": "องค์กร กฟภ.", "body": "สร้างฐานข้อมูลที่แท้จริง สอดคล้องกับทิศทาง Digital Transformation" }
-    ]
-  },
-
   "roi": {
     "eyebrow": "ผลลัพธ์ด้านการเงิน",
     "heading": "Micro-Cost for Macro-Protection",
@@ -523,35 +492,6 @@
     </div>
   </section>
 
-  <section class="slide" id="credits" data-label="Safety Credits">
-    <div class="wrap">
-      <div class="eyebrow" data-key="creditsOffset.eyebrow"></div>
-      <h2 data-key="creditsOffset.heading"></h2>
-      <p class="lead" data-key="creditsOffset.lead"></p>
-      <div class="tier-grid fade-up" id="tier-grid"></div>
-      <div class="offset-banner fade-up" data-key="creditsOffset.banner"></div>
-    </div>
-  </section>
-
-  <section class="slide" id="reactive" data-label="Proactive Org">
-    <div class="wrap">
-      <div class="eyebrow" data-key="reactive.eyebrow"></div>
-      <h2 data-key="reactive.heading"></h2>
-      <div class="rp-row fade-up">
-        <div class="rp-box reactive">
-          <div class="rp-title" data-key="reactive.reactiveTitle"></div>
-          <p data-key="reactive.reactiveBody"></p>
-        </div>
-        <div class="rp-arrow">➜</div>
-        <div class="rp-box proactive">
-          <div class="rp-title" data-key="reactive.proactiveTitle"></div>
-          <p data-key="reactive.proactiveBody"></p>
-        </div>
-      </div>
-      <div class="rp-groups fade-up" id="rp-groups"></div>
-    </div>
-  </section>
-
   <section class="slide" id="roi" style="background:var(--dark)" data-label="ผลตอบแทน">
     <div class="wrap">
       <div class="eyebrow" data-key="roi.eyebrow"></div>
@@ -631,14 +571,6 @@
   const demoLink = document.getElementById('demo-link');
   demoLink.href = `https://youtube.com/shorts/${DATA.demo.videoId}`;
   demoLink.textContent = DATA.demo.linkLabel;
-
-  document.getElementById('tier-grid').innerHTML = DATA.creditsOffset.tiers.map(t=>
-    `<div class="tier-card t-${t.tone}"><div><div class="t-level">${t.level}</div><div class="t-note">${t.note}</div></div><div class="t-credit">${t.credit}</div></div>`
-  ).join('');
-
-  document.getElementById('rp-groups').innerHTML = DATA.reactive.groups.map(g=>
-    `<div class="rp-group"><h4>${g.title}</h4><p>${g.body}</p></div>`
-  ).join('');
 
   document.getElementById('contact-cards').innerHTML = DATA.contact.cards.map(c=>
     `<div class="contact-card"><div class="k">${c.label}</div><div class="v">${c.value}</div></div>`

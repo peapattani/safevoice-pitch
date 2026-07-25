@@ -32,6 +32,8 @@
     overflow-y:auto; display:flex; flex-direction:column; justify-content:flex-start;
     padding:76px 20px 48px; position:relative;
   }
+  /* สไลด์ที่เนื้อหาไม่ล้นจอ จะถูกเติม class นี้ด้วย JS ให้จัดกึ่งกลางแทนลอยค้างด้านบน */
+  .slide.centered{ justify-content:center; }
   .wrap{ max-width:520px; margin:0 auto; width:100%; }
   .eyebrow{
     font-family:var(--mono); font-size:12px; letter-spacing:.11em; text-transform:uppercase;
@@ -60,11 +62,11 @@
     padding:4px 10px; border-radius:20px;
   }
 
-  .dotnav{ position:fixed; bottom:12px; left:0; right:0; z-index:60; display:flex; justify-content:center; gap:6px; }
+  .dotnav{ position:fixed; right:10px; top:50%; transform:translateY(-50%); z-index:60; display:flex; flex-direction:column; gap:7px; }
   .dotnav button{
-    all:unset; cursor:pointer; width:7px; height:7px; border-radius:50%; background:var(--border); transition:.25s;
+    all:unset; cursor:pointer; width:6px; height:6px; border-radius:50%; background:var(--border); transition:.25s;
   }
-  .dotnav button.active{ background:var(--green); width:16px; border-radius:4px; }
+  .dotnav button.active{ background:var(--green); height:16px; border-radius:4px; }
 
   /* ===================== HERO ===================== */
   .hero{
@@ -360,19 +362,6 @@
     "banner": "สะสมครบ 300 Credits หักล้างผลกระทบใบเตือนได้ 1 ใบ หรือสะสมคะแนนรับรางวัลประจำปี"
   },
 
-  "trial": {
-    "eyebrow": "ข้อมูลจริง",
-    "heading": "ผลการทดสอบใช้งานจริง (Prototype Trial)",
-    "lead": "ทดสอบกับพนักงานช่าง 12 คน จำนวน 27 กรณีศึกษา",
-    "rows": [
-      { "label": "ความแม่นยำของการแปลงเสียง (Speech-to-Text)", "value": "> 90%" },
-      { "label": "ความถูกต้องของการวิเคราะห์ความเสี่ยง (AI Analysis)", "value": "88%" },
-      { "label": "การตอบสนองระบบ Safety Credits (เข้าบัญชีทันที)", "value": "100% Success" },
-      { "label": "Verification Flow โดย จป. แจ้งเตือนภายใน 48 ชม.", "value": "ผ่านทุกกรณี" },
-      { "label": "ความเสถียรของ UI บนทุกหน้าจอ (PC & Mobile)", "value": "Seamless" }
-    ]
-  },
-
   "reactive": {
     "eyebrow": "ผลลัพธ์เชิงวัฒนธรรม",
     "heading": "สู่การเป็น Proactive Organization",
@@ -543,15 +532,6 @@
     </div>
   </section>
 
-  <section class="slide" id="trial" style="background:var(--dark)" data-label="ผลทดสอบ">
-    <div class="wrap">
-      <div class="eyebrow" data-key="trial.eyebrow"></div>
-      <h2 data-key="trial.heading"></h2>
-      <p class="lead" data-key="trial.lead"></p>
-      <div class="check-list fade-up" id="check-list"></div>
-    </div>
-  </section>
-
   <section class="slide" id="reactive" data-label="Proactive Org">
     <div class="wrap">
       <div class="eyebrow" data-key="reactive.eyebrow"></div>
@@ -655,10 +635,6 @@
     `<div class="tier-card t-${t.tone}"><div><div class="t-level">${t.level}</div><div class="t-note">${t.note}</div></div><div class="t-credit">${t.credit}</div></div>`
   ).join('');
 
-  document.getElementById('check-list').innerHTML = DATA.trial.rows.map(r=>
-    `<div class="check-row"><span class="cr-label">${r.label}</span><span class="cr-value">${r.value}</span></div>`
-  ).join('');
-
   document.getElementById('rp-groups').innerHTML = DATA.reactive.groups.map(g=>
     `<div class="rp-group"><h4>${g.title}</h4><p>${g.body}</p></div>`
   ).join('');
@@ -700,6 +676,20 @@
   }, { root: slidesEl, threshold: 0.55 });
   slides.forEach(s=> io.observe(s));
   updateActive(0);
+
+  // ===================== จัดกึ่งกลางเฉพาะสไลด์ที่เนื้อหาไม่ล้นจอ =====================
+  // วัดความสูงจริงของแต่ละสไลด์เทียบกับพื้นที่จอ ถ้าเนื้อหาสั้นกว่าจอ ให้จัดกึ่งกลาง
+  // ถ้าเนื้อหายาวเกินจอ ให้เริ่มจากด้านบน (เลื่อนลงอ่านต่อได้ตามธรรมชาติ)
+  function centerShortSlides(){
+    slides.forEach(s=>{
+      const overflowing = s.scrollHeight > s.clientHeight + 2;
+      s.classList.toggle('centered', !overflowing);
+    });
+  }
+  centerShortSlides();
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(centerShortSlides); }
+  window.addEventListener('resize', centerShortSlides);
+  window.addEventListener('orientationchange', centerShortSlides);
 })();
 </script>
 

@@ -126,43 +126,6 @@
   .cmp-cell.new::before{ content:'✅ '; }
   .cmp-cell.old::before{ content:'⛔ '; }
 
-  /* ===================== PRODUCT MOCKUP ===================== */
-  .mock-grid{ display:grid; grid-template-columns:1fr; gap:14px; margin-top:14px; justify-items:center; }
-  .phone{ width:195px; border-radius:24px; border:5px solid #050c18; background:var(--navy); box-shadow:0 20px 40px -18px #000a,0 0 0 1px var(--border); overflow:hidden; }
-  .phone-screen{ padding:12px 11px; }
-  .phone-head{ display:flex; align-items:center; gap:6px; font-size:9px; color:var(--muted); margin-bottom:8px; }
-  .mode-tabs{ display:flex; gap:5px; background:var(--card); border:1px solid var(--border); border-radius:9px; padding:3px; margin-bottom:10px; }
-  .mode-tab{ flex:1; text-align:center; padding:5px 3px; border-radius:7px; font-size:9px; color:var(--muted); }
-  .mode-tab.active{ background:var(--green); color:#001a08; font-weight:700; }
-  .record-btn{
-    width:46px; height:46px; border-radius:50%; margin:3px auto 8px;
-    background:linear-gradient(135deg,var(--green),var(--greendk)); box-shadow:0 0 0 7px #00c96a22;
-    display:flex; align-items:center; justify-content:center; font-size:16px; animation:pulse 2s infinite;
-  }
-  @keyframes pulse{ 0%{ box-shadow:0 0 0 0 #00c96a33; } 70%{ box-shadow:0 0 0 11px #00c96a00; } 100%{ box-shadow:0 0 0 0 #00c96a00; } }
-  .waveform{ display:flex; justify-content:center; gap:2px; height:12px; align-items:flex-end; margin-bottom:8px; }
-  .waveform span{ width:2.5px; background:var(--green); border-radius:2px; animation:wave .9s ease-in-out infinite; }
-  .waveform span:nth-child(1){ height:5px; } .waveform span:nth-child(2){ height:11px; animation-delay:.1s; }
-  .waveform span:nth-child(3){ height:6px; animation-delay:.2s; } .waveform span:nth-child(4){ height:12px; animation-delay:.3s; }
-  .waveform span:nth-child(5){ height:5px; animation-delay:.4s; }
-  @keyframes wave{ 0%,100%{ transform:scaleY(.5);} 50%{ transform:scaleY(1);} }
-  .phone-note{ text-align:center; font-size:9px; color:var(--muted); margin-bottom:8px; }
-  .photo-req{ font-size:8px; color:var(--red); text-align:center; margin-bottom:6px; }
-  .result-card{ background:#0A1E10; border:1px solid #00c96a33; border-radius:10px; padding:8px 9px; font-size:9.5px; color:#7ACF9A; line-height:1.45; }
-  .result-card b{ display:block; color:var(--green); font-size:10px; margin-bottom:2px; }
-  .admin-mock{ width:100%; max-width:280px; background:var(--dark); border:1px solid var(--border); border-radius:15px; padding:14px; box-shadow:0 16px 32px -18px #000c; }
-  .admin-mock h4{ font-size:11px; color:var(--muted); font-family:var(--mono); margin-bottom:8px; }
-  .verify-row{ display:flex; justify-content:space-between; align-items:center; background:var(--card); border:1px solid var(--border); border-radius:9px; padding:7px 11px; margin-bottom:6px; font-size:12px; }
-  .badge{ font-size:9px; font-weight:700; padding:3px 7px; border-radius:5px; font-family:var(--mono); }
-  .badge-pending{ background:#f59e0b22; border:1px solid var(--amber); color:var(--amber); }
-  .badge-verified{ background:#00c96a22; border:1px solid var(--green); color:var(--green); }
-  .badge-high{ background:#ef444422; border:1px solid var(--red); color:var(--red); }
-  .lb-row{ display:flex; align-items:center; gap:9px; padding:6px 4px; border-bottom:1px solid var(--border); font-size:12px; }
-  .lb-row:last-child{ border-bottom:none; }
-  .lb-rank{ font-family:var(--mono); font-weight:800; width:18px; color:var(--gold); }
-  .lb-name{ flex:1; }
-  .lb-credit{ font-family:var(--mono); color:var(--green); font-weight:700; }
-
   /* ===================== DEMO VIDEO (YouTube Shorts, 9:16) ===================== */
   .video-frame{
     width:min(60vw, 210px); aspect-ratio:9/16; margin:13px auto 0; border-radius:20px; overflow:hidden;
@@ -174,47 +137,6 @@
     color:var(--green); text-decoration:none;
   }
   .video-link:hover{ text-decoration:underline; }
-
-  /* ===================== CREDITS OFFSET ===================== */
-  .tier-grid{ display:grid; grid-template-columns:1fr; gap:10px; margin-top:17px; }
-  .tier-card{ background:var(--card); border:1px solid var(--border); border-left:3px solid var(--border); border-radius:13px; padding:13px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  .tier-card.t-green{ border-left-color:var(--green); }
-  .tier-card.t-amber{ border-left-color:var(--amber); }
-  .tier-card.t-red{ border-left-color:var(--red); }
-  .tier-card .t-level{ font-family:var(--mono); font-size:11.5px; color:var(--muted); text-transform:uppercase; }
-  .tier-card .t-note{ font-size:11.5px; color:var(--muted); margin-top:3px; }
-  .tier-card .t-credit{ font-family:var(--mono); font-size:22px; font-weight:800; white-space:nowrap; }
-  .tier-card.t-green .t-credit{ color:var(--green); }
-  .tier-card.t-amber .t-credit{ color:var(--amber); }
-  .tier-card.t-red .t-credit{ color:var(--red); }
-  .offset-banner{
-    margin-top:15px; text-align:center; font-size:13.5px; font-weight:700; color:var(--green);
-    background:#0a1e14; border:1px solid #00c96a55; border-radius:13px; padding:14px 18px; line-height:1.5;
-  }
-
-  /* ===================== TRIAL RESULTS ===================== */
-  .check-list{ margin-top:17px; display:flex; flex-direction:column; gap:8px; }
-  .check-row{
-    display:flex; justify-content:space-between; align-items:center; gap:10px;
-    background:var(--card); border:1px solid var(--border); border-radius:11px; padding:11px 14px; font-size:12.5px;
-  }
-  .check-row .cr-value{ font-family:var(--mono); font-weight:700; color:var(--green); white-space:nowrap; font-size:12px; }
-  .check-row .cr-label::before{ content:'✅ '; }
-
-  /* ===================== REACTIVE -> PROACTIVE ===================== */
-  .rp-row{ display:flex; flex-direction:column; gap:7px; margin-top:13px; }
-  .rp-box{ padding:11px 14px; border-radius:12px; }
-  .rp-box.reactive{ background:var(--card); border:1px solid var(--border); }
-  .rp-box.proactive{ background:linear-gradient(120deg,#00c96a22,#a855f733); border:1px solid var(--green); }
-  .rp-box .rp-title{ font-weight:800; font-size:13.5px; margin-bottom:3px; }
-  .rp-box.reactive .rp-title{ color:var(--muted); }
-  .rp-box.proactive .rp-title{ color:var(--green); }
-  .rp-box p{ font-size:12px; color:var(--ice); line-height:1.45; }
-  .rp-arrow{ text-align:center; font-size:15px; color:var(--green); transform:rotate(90deg); }
-  .rp-groups{ display:grid; grid-template-columns:1fr; gap:7px; margin-top:11px; }
-  .rp-group{ background:var(--card); border:1px solid var(--border); border-radius:11px; padding:10px 13px; }
-  .rp-group h4{ font-size:12px; color:var(--green); margin-bottom:3px; }
-  .rp-group p{ font-size:11.5px; color:var(--muted); line-height:1.45; }
 
   /* ===================== ROI ===================== */
   .roi-grid{ display:flex; flex-direction:column; align-items:center; gap:16px; margin-top:17px; }
@@ -314,24 +236,6 @@
       { "dim": "การวิเคราะห์ความเสี่ยง", "old": " จป. ต้องนำมาอ่านและวิเคราะห์เองทีละแผ่น", "new": " AI จำแนกความเสี่ยงและแนะนำ Action ทันที" },
       { "dim": "แรงจูงใจพนักงาน", "old": " กลัวการถูกเพ่งเล็งหรือลงโทษ รายงานแล้วไม่มีผลอะไรกลับมา", "new": " ได้รับ Safety Credits เป็นแรงจูงใจเชิงบวก" },
       { "dim": "สถานะข้อมูล", "old": " ล่าช้า สูญหายง่าย", "new": " รวบรวมเป็น Real-time Dashboard" }
-    ]
-  },
-
-  "product": {
-    "eyebrow": "ใช้งานได้จริงวันนี้",
-    "aiResultLabel": "ผลวิเคราะห์จาก AI Engine",
-    "aiResult": "ความเสี่ยง: อุปกรณ์ชำรุด (ระดับกลาง) — Credits +13",
-    "verifyTitle": "// แอดมิน — ยืนยันรายงาน Near Miss",
-    "verifyRows": [
-      { "label": "NM-108 · หนองจิก", "badge": "pending", "badgeText": "รอตรวจสอบ" },
-      { "label": "NM-107 · ยะรัง", "badge": "high", "badgeText": "เสี่ยงสูง" },
-      { "label": "NM-106 · ปัตตานี", "badge": "verified", "badgeText": "ยืนยันแล้ว" }
-    ],
-    "leaderboardTitle": "🏅 Leaderboard — Credits สะสม",
-    "leaderboard": [
-      { "rank": 1, "name": "อับดุลบารี ส.", "credit": "+320" },
-      { "rank": 2, "name": "ธนบัตร น.", "credit": "+275" },
-      { "rank": 3, "name": "วิริยะ ร.", "credit": "+240" }
     ]
   },
 
@@ -445,39 +349,6 @@
     </div>
   </section>
 
-  <section class="slide" id="product" data-label="ตัวระบบจริง">
-    <div class="wrap">
-      <div class="eyebrow" data-key="product.eyebrow"></div>
-      <h2 data-key="product.heading"></h2>
-      <p class="lead" data-key="product.lead"></p>
-      <div class="mock-grid">
-        <div class="phone fade-up">
-          <div class="phone-screen">
-            <div class="phone-head">🛡️ รายงาน Near Miss</div>
-            <div class="mode-tabs">
-              <div class="mode-tab active">🎙 บันทึกเสียง</div>
-              <div class="mode-tab">พิมพ์ข้อความ</div>
-            </div>
-            <div class="record-btn">🎙</div>
-            <div class="waveform"><span></span><span></span><span></span><span></span><span></span></div>
-            <div class="phone-note">แตะไมค์แล้วเล่าเหตุการณ์ได้เลย</div>
-            <div class="photo-req">* แนบรูปถ่ายประกอบ บังคับทุกรายงาน</div>
-            <div class="result-card">
-              <b data-key="product.aiResultLabel"></b>
-              <span data-key="product.aiResult"></span>
-            </div>
-          </div>
-        </div>
-        <div class="admin-mock fade-up">
-          <h4 data-key="product.verifyTitle"></h4>
-          <div id="product-verify"></div>
-          <h4 style="margin-top:12px" data-key="product.leaderboardTitle"></h4>
-          <div id="product-leaderboard"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="slide" id="demo" style="background:var(--dark)" data-label="วิดีโอสาธิต">
     <div class="wrap" style="text-align:center">
       <div class="eyebrow" style="justify-content:center" data-key="demo.eyebrow"></div>
@@ -555,13 +426,6 @@
     DATA.comparison.rows.map(r=>
       `<div class="cmp-row"><div class="cmp-cell dim">${r.dim}</div><div class="cmp-cell old">${r.old}</div><div class="cmp-cell new">${r.new}</div></div>`
     ).join('');
-
-  document.getElementById('product-verify').innerHTML = DATA.product.verifyRows.map(r=>
-    `<div class="verify-row"><span>${r.label}</span><span class="badge badge-${r.badge}">${r.badgeText}</span></div>`
-  ).join('');
-  document.getElementById('product-leaderboard').innerHTML = DATA.product.leaderboard.map(r=>
-    `<div class="lb-row"><span class="lb-rank">${r.rank}</span><span class="lb-name">${r.name}</span><span class="lb-credit">${r.credit}</span></div>`
-  ).join('');
 
   const demoIframe = document.getElementById('demo-iframe');
   demoIframe.src = `https://www.youtube.com/embed/${DATA.demo.videoId}`;

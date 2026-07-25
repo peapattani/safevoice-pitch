@@ -20,20 +20,21 @@
   ::selection{ background:var(--green); color:#001a08; }
 
   /* =====================================================================
-     MOBILE-ONLY SLIDE ENGINE — ไม่มีโหมดเดสก์ท็อป/16:9 อีกต่อไป
+     MOBILE-ONLY PAGE — ไม่มีโหมดเดสก์ท็อป/16:9 อีกต่อไป
      เพราะเปลี่ยนไปนำเสนอด้วย PPT แทน เว็บนี้ใช้แค่เปิดดูบนมือถือ
      หลักการจัดวาง: (1) หัวข้อของทุกสไลด์อยู่ด้านบนเสมอ ไม่จัดกึ่งกลาง
-     (2) พยายามให้เนื้อหาพอดี 1 จอเท่าที่ทำได้ (3) ถ้ายาวเกินจริงๆ ยอมให้
-     เลื่อนดูต่อได้เล็กน้อย ดีกว่าบีบจนอ่านไม่ออก
+     (2) แต่ละหัวข้อสูงเท่าที่เนื้อหาต้องการจริง ไม่บังคับให้เต็ม 1 จอเสมอไป
+     — นี่คือจุดที่แก้ทั้งปัญหา "เนื้อหาน้อยแล้วมีที่ว่างเหลือเยอะ" และ
+     "เนื้อหาเยอะจนล้นจอ" พร้อมกัน เพราะทั้งสองเกิดจากสาเหตุเดียวกันคือ
+     การบังคับความสูงคงที่ 100vh ต่อสไลด์ (ของเดิม)
+     (3) ยังคง "เลื่อนแล้วสแนปเข้าหัวข้อถัดไปพอดี" ไว้เหมือนเดิม
      ===================================================================== */
-  #slides{ height:100vh; height:100dvh; overflow-y:scroll; scroll-snap-type:y mandatory; }
+  #slides{ height:100vh; height:100dvh; overflow-y:scroll; scroll-snap-type:y proximity; }
   .slide{
-    height:100vh; height:100dvh; scroll-snap-align:start; scroll-snap-stop:always;
-    overflow-y:auto; display:flex; flex-direction:column; justify-content:flex-start;
+    scroll-snap-align:start;
+    display:flex; flex-direction:column; justify-content:flex-start;
     padding:68px 20px 40px; position:relative;
   }
-  /* สไลด์ที่เนื้อหาไม่ล้นจอ จะถูกเติม class นี้ด้วย JS ให้จัดกึ่งกลางแทนลอยค้างด้านบน */
-  /* หัวข้อทุกสไลด์อยู่ด้านบนเสมอ (ไม่จัดกึ่งกลาง) — ถ้าเนื้อหายาวเกินจอ ให้เลื่อนดูต่อได้ตามปกติ */
   .wrap{ max-width:520px; margin:0 auto; width:100%; }
   .eyebrow{
     font-family:var(--mono); font-size:12px; letter-spacing:.11em; text-transform:uppercase;

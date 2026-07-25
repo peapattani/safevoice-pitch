@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>SafeVoice — ทุกรายงานคือการป้องกันอุบัติเหตุ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0A1628; --dark:#0D1E35; --card:#0F2540; --card2:#112A48; --border:#1A3050;
+    --green:#00C96A; --greendk:#00A855; --amber:#F59E0B; --red:#EF4444; --purple:#A855F7;
+    --white:#E8F4FF; --muted:#5A8AAA; --ice:#C8E6FF; --gold:#FFD700;
+    --mono:'JetBrains Mono', monospace; --sans:'Sarabun', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{ font-family:var(--sans); background:var(--navy); color:var(--white); line-height:1.62; }
+  ::selection{ background:var(--green); color:#001a08; }
+
+  /* =====================================================================
+     MOBILE-ONLY SLIDE ENGINE — ไม่มีโหมดเดสก์ท็อป/16:9 อีกต่อไป
+     เพราะเปลี่ยนไปนำเสนอด้วย PPT แทน เว็บนี้ใช้แค่เปิดดูบนมือถือ
+     หมายเหตุ: บางสไลด์ยาวเกิน 1 จอ ต้องเลื่อนดูต่อ — ถือเป็นเรื่องปกติสำหรับ
+     เว็บที่เปิดดูเอง (ไม่ใช่นำเสนอสด) จึงเลือกให้ตัวอักษรอ่านสบายไว้ก่อน
+     แทนที่จะบีบให้พอดีจอเดียวจนตัวเล็กเกินไป
+     ===================================================================== */
+  #slides{ height:100vh; height:100dvh; overflow-y:scroll; scroll-snap-type:y mandatory; }
+  .slide{
+    height:100vh; height:100dvh; scroll-snap-align:start; scroll-snap-stop:always;
+    overflow-y:auto; display:flex; flex-direction:column; justify-content:flex-start;
+    padding:76px 20px 48px; position:relative;
+  }
+  .wrap{ max-width:520px; margin:0 auto; width:100%; }
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--green); font-weight:600; margin-bottom:10px; display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{ content:''; width:18px; height:1px; background:var(--green); display:inline-block; }
+  h1,h2,h3{ font-weight:800; letter-spacing:-0.01em; }
+  h2{ font-size:clamp(24px,7vw,30px); margin-bottom:12px; line-height:1.28; }
+  .lead{ font-size:clamp(14px,3.8vw,16px); color:var(--ice); }
+  .fade-up{ opacity:0; transform:translateY(16px); transition:opacity .5s ease, transform .5s ease; }
+  .fade-up.in{ opacity:1; transform:translateY(0); }
+
+  /* ---- fixed chrome ---- */
+  .topbar{
+    position:fixed; top:0; left:0; right:0; z-index:60;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:13px 20px; background:linear-gradient(#0A1628 65%, transparent);
+  }
+  .topbar-logo{ display:flex; align-items:center; gap:8px; font-weight:800; font-size:15px; }
+  .logo-icon{
+    width:25px; height:25px; border-radius:7px; background:linear-gradient(135deg,var(--green),var(--greendk));
+    display:flex; align-items:center; justify-content:center; font-size:12.5px;
+  }
+  .topbar-badge{
+    font-family:var(--mono); font-size:10px; color:var(--muted); border:1px solid var(--border);
+    padding:4px 10px; border-radius:20px;
+  }
+
+  .dotnav{ position:fixed; bottom:12px; left:0; right:0; z-index:60; display:flex; justify-content:center; gap:6px; }
+  .dotnav button{
+    all:unset; cursor:pointer; width:7px; height:7px; border-radius:50%; background:var(--border); transition:.25s;
+  }
+  .dotnav button.active{ background:var(--green); width:16px; border-radius:4px; }
+
+  /* ===================== HERO ===================== */
+  .hero{
+    background:
+      radial-gradient(ellipse 500px 400px at 20% 0%, #00c96a1a, transparent 60%),
+      radial-gradient(ellipse 400px 400px at 100% 30%, #0d2a1a80, transparent 60%),
+      var(--navy);
+  }
+  .hero-badge{
+    display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:11.5px;
+    color:var(--gold); background:#ffd70014; border:1px solid #ffd70044; padding:7px 13px;
+    border-radius:20px; margin-bottom:18px; width:fit-content;
+  }
+  .hero-logo{ display:flex; align-items:center; gap:12px; margin-bottom:3px; }
+  .hero-logo .logo-icon{ width:42px; height:42px; border-radius:12px; font-size:19px; }
+  .hero h1{ font-size:clamp(46px,14vw,58px); line-height:.95; }
+  .hero .tagline{ font-size:clamp(19px,5.2vw,23px); color:var(--green); font-weight:700; margin-top:11px; }
+  .hero .sub{ font-size:clamp(14px,3.8vw,16px); color:var(--ice); margin-top:11px; }
+  .hero-team{ font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:12px; }
+  .hero-team b{ color:var(--ice); font-weight:600; }
+  .hero-stats{ display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+  .pill{ font-family:var(--mono); font-size:12px; border:1px solid var(--border); background:var(--card); padding:7px 12px; border-radius:9px; color:var(--ice); }
+  .pill b{ color:var(--green); }
+
+  /* ===================== PROBLEM (Heinrich) ===================== */
+  .triangle-solo{ display:flex; justify-content:center; margin-top:16px; }
+  .triangle-wrap{ display:flex; flex-direction:column; align-items:center; }
+  .triangle-cap{ font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:10px; text-align:center; line-height:1.5; }
+
+  /* ===================== PROBLEM CULTURE (chain) ===================== */
+  .callout{ border-radius:11px; padding:11px 15px; font-size:13px; display:flex; align-items:center; gap:8px; margin-top:15px; line-height:1.45; }
+  .callout-red{ border:1px solid var(--red); background:#ef444414; color:#ffc2c2; }
+  .callout-purple{ border:1px solid var(--purple); background:#a855f714; color:var(--ice); }
+  .chain-list{ margin-top:15px; display:flex; flex-direction:column; align-items:center; }
+  .chain-item{
+    width:100%; display:flex; align-items:center; gap:11px; background:var(--card);
+    border:1px solid var(--border); border-radius:11px; padding:10px 15px; font-size:13.5px;
+  }
+  .chain-item .ci-icon{ font-size:18px; flex-shrink:0; }
+  .chain-item.danger{ background:#2a0e0e; border-color:var(--red); color:#ffb4b4; }
+  .chain-arrow{ color:var(--red); font-size:13px; margin:3px 0; }
+  .limits-row{ display:flex; flex-wrap:wrap; gap:7px; justify-content:center; margin-top:13px; }
+  .chip{ font-size:11.5px; border:1px solid var(--border); background:var(--card); padding:6px 12px; border-radius:16px; color:var(--ice); }
+
+  /* ===================== OBJECTIVES ===================== */
+  .obj-grid{ display:grid; grid-template-columns:1fr; gap:10px; margin-top:17px; }
+  .obj-card{ background:var(--card); border:1px solid var(--border); border-radius:13px; padding:14px 16px; }
+  .obj-card .oi{ font-size:20px; margin-bottom:5px; display:block; }
+  .obj-card h4{ font-size:14.5px; margin-bottom:4px; color:var(--green); }
+  .obj-card p{ font-size:13px; color:var(--muted); line-height:1.5; }
+
+  /* ===================== COMPARISON TABLE ===================== */
+  .cmp-table{ margin-top:17px; border:1px solid var(--border); border-radius:13px; overflow:hidden; }
+  .cmp-row{ display:grid; grid-template-columns:1fr; }
+  .cmp-row.head{ display:none; }
+  .cmp-row + .cmp-row{ border-top:1px solid var(--border); }
+  .cmp-cell{ padding:9px 14px; font-size:13px; display:flex; align-items:center; line-height:1.45; }
+  .cmp-cell.dim{ background:var(--card); font-weight:700; color:var(--ice); padding-bottom:4px; }
+  .cmp-cell.old{ background:#150c0c; color:#c98a8a; }
+  .cmp-cell.new{ background:#0a1e14; color:#7ACF9A; }
+  .cmp-cell.new::before{ content:'✅ '; }
+  .cmp-cell.old::before{ content:'⛔ '; }
+
+  /* ===================== PRODUCT MOCKUP ===================== */
+  .mock-grid{ display:grid; grid-template-columns:1fr; gap:18px; margin-top:17px; justify-items:center; }
+  .phone{ width:220px; border-radius:26px; border:6px solid #050c18; background:var(--navy); box-shadow:0 20px 40px -18px #000a,0 0 0 1px var(--border); overflow:hidden; }
+  .phone-screen{ padding:14px 13px; }
+  .phone-head{ display:flex; align-items:center; gap:6px; font-size:9.5px; color:var(--muted); margin-bottom:10px; }
+  .mode-tabs{ display:flex; gap:5px; background:var(--card); border:1px solid var(--border); border-radius:9px; padding:3px; margin-bottom:12px; }
+  .mode-tab{ flex:1; text-align:center; padding:6px 3px; border-radius:7px; font-size:9.5px; color:var(--muted); }
+  .mode-tab.active{ background:var(--green); color:#001a08; font-weight:700; }
+  .record-btn{
+    width:52px; height:52px; border-radius:50%; margin:4px auto 9px;
+    background:linear-gradient(135deg,var(--green),var(--greendk)); box-shadow:0 0 0 8px #00c96a22;
+    display:flex; align-items:center; justify-content:center; font-size:18px; animation:pulse 2s infinite;
+  }
+  @keyframes pulse{ 0%{ box-shadow:0 0 0 0 #00c96a33; } 70%{ box-shadow:0 0 0 12px #00c96a00; } 100%{ box-shadow:0 0 0 0 #00c96a00; } }
+  .waveform{ display:flex; justify-content:center; gap:2px; height:14px; align-items:flex-end; margin-bottom:9px; }
+  .waveform span{ width:2.5px; background:var(--green); border-radius:2px; animation:wave .9s ease-in-out infinite; }
+  .waveform span:nth-child(1){ height:5px; } .waveform span:nth-child(2){ height:12px; animation-delay:.1s; }
+  .waveform span:nth-child(3){ height:7px; animation-delay:.2s; } .waveform span:nth-child(4){ height:14px; animation-delay:.3s; }
+  .waveform span:nth-child(5){ height:6px; animation-delay:.4s; }
+  @keyframes wave{ 0%,100%{ transform:scaleY(.5);} 50%{ transform:scaleY(1);} }
+  .phone-note{ text-align:center; font-size:9.5px; color:var(--muted); margin-bottom:9px; }
+  .photo-req{ font-size:8.5px; color:var(--red); text-align:center; margin-bottom:7px; }
+  .result-card{ background:#0A1E10; border:1px solid #00c96a33; border-radius:11px; padding:9px 10px; font-size:10px; color:#7ACF9A; line-height:1.5; }
+  .result-card b{ display:block; color:var(--green); font-size:10.5px; margin-bottom:3px; }
+  .admin-mock{ width:100%; max-width:300px; background:var(--dark); border:1px solid var(--border); border-radius:17px; padding:17px; box-shadow:0 16px 32px -18px #000c; }
+  .admin-mock h4{ font-size:11.5px; color:var(--muted); font-family:var(--mono); margin-bottom:10px; }
+  .verify-row{ display:flex; justify-content:space-between; align-items:center; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:9px 12px; margin-bottom:7px; font-size:12.5px; }
+  .badge{ font-size:9.5px; font-weight:700; padding:3px 8px; border-radius:5px; font-family:var(--mono); }
+  .badge-pending{ background:#f59e0b22; border:1px solid var(--amber); color:var(--amber); }
+  .badge-verified{ background:#00c96a22; border:1px solid var(--green); color:var(--green); }
+  .badge-high{ background:#ef444422; border:1px solid var(--red); color:var(--red); }
+  .lb-row{ display:flex; align-items:center; gap:10px; padding:7px 4px; border-bottom:1px solid var(--border); font-size:12.5px; }
+  .lb-row:last-child{ border-bottom:none; }
+  .lb-rank{ font-family:var(--mono); font-weight:800; width:20px; color:var(--gold); }
+  .lb-name{ flex:1; }
+  .lb-credit{ font-family:var(--mono); color:var(--green); font-weight:700; }
+
+  /* ===================== DEMO VIDEO (YouTube Shorts, 9:16) ===================== */
+  .video-frame{
+    width:min(66vw, 235px); aspect-ratio:9/16; margin:17px auto 0; border-radius:22px; overflow:hidden;
+    border:1px solid var(--border); background:#000; box-shadow:0 20px 45px -18px #000a;
+  }
+  .video-frame iframe{ width:100%; height:100%; border:0; display:block; }
+  .video-link{
+    display:block; text-align:center; margin-top:13px; font-family:var(--mono); font-size:12px;
+    color:var(--green); text-decoration:none;
+  }
+  .video-link:hover{ text-decoration:underline; }
+
+  /* ===================== CREDITS OFFSET ===================== */
+  .tier-grid{ display:grid; grid-template-columns:1fr; gap:10px; margin-top:17px; }
+  .tier-card{ background:var(--card); border:1px solid var(--border); border-left:3px solid var(--border); border-radius:13px; padding:13px 16px; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .tier-card.t-green{ border-left-color:var(--green); }
+  .tier-card.t-amber{ border-left-color:var(--amber); }
+  .tier-card.t-red{ border-left-color:var(--red); }
+  .tier-card .t-level{ font-family:var(--mono); font-size:11.5px; color:var(--muted); text-transform:uppercase; }
+  .tier-card .t-note{ font-size:11.5px; color:var(--muted); margin-top:3px; }
+  .tier-card .t-credit{ font-family:var(--mono); font-size:22px; font-weight:800; white-space:nowrap; }
+  .tier-card.t-green .t-credit{ color:var(--green); }
+  .tier-card.t-amber .t-credit{ color:var(--amber); }
+  .tier-card.t-red .t-credit{ color:var(--red); }
+  .offset-banner{
+    margin-top:15px; text-align:center; font-size:13.5px; font-weight:700; color:var(--green);
+    background:#0a1e14; border:1px solid #00c96a55; border-radius:13px; padding:14px 18px; line-height:1.5;
+  }
+
+  /* ===================== TRIAL RESULTS ===================== */
+  .check-list{ margin-top:17px; display:flex; flex-direction:column; gap:8px; }
+  .check-row{
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    background:var(--card); border:1px solid var(--border); border-radius:11px; padding:11px 14px; font-size:12.5px;
+  }
+  .check-row .cr-value{ font-family:var(--mono); font-weight:700; color:var(--green); white-space:nowrap; font-size:12px; }
+  .check-row .cr-label::before{ content:'✅ '; }
+
+  /* ===================== REACTIVE -> PROACTIVE ===================== */
+  .rp-row{ display:flex; flex-direction:column; gap:9px; margin-top:16px; }
+  .rp-box{ padding:14px 17px; border-radius:13px; }
+  .rp-box.reactive{ background:var(--card); border:1px solid var(--border); }
+  .rp-box.proactive{ background:linear-gradient(120deg,#00c96a22,#a855f733); border:1px solid var(--green); }
+  .rp-box .rp-title{ font-weight:800; font-size:14px; margin-bottom:4px; }
+  .rp-box.reactive .rp-title{ color:var(--muted); }
+  .rp-box.proactive .rp-title{ color:var(--green); }
+  .rp-box p{ font-size:12.5px; color:var(--ice); line-height:1.5; }
+  .rp-arrow{ text-align:center; font-size:17px; color:var(--green); transform:rotate(90deg); }
+  .rp-groups{ display:grid; grid-template-columns:1fr; gap:9px; margin-top:14px; }
+  .rp-group{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 15px; }
+  .rp-group h4{ font-size:12.5px; color:var(--green); margin-bottom:4px; }
+  .rp-group p{ font-size:12px; color:var(--muted); line-height:1.5; }
+
+  /* ===================== ROI ===================== */
+  .roi-grid{ display:flex; flex-direction:column; align-items:center; gap:16px; margin-top:17px; }
+  .roi-cost{ width:100%; text-align:center; }
+  .roi-cost .rc-label{ font-size:12px; color:var(--muted); margin-bottom:5px; }
+  .roi-cost .rc-value{ font-family:var(--mono); font-size:24px; font-weight:800; color:var(--ice); }
+  .roi-cost .rc-note{ font-size:11.5px; color:var(--muted); margin-top:5px; line-height:1.5; }
+  .roi-protect{
+    width:100%; text-align:center; padding:22px 18px; border-radius:19px;
+    background:radial-gradient(circle at center, #00c96a2e, transparent 70%);
+  }
+  .roi-protect .rp-label{ font-size:13.5px; color:var(--white); margin-bottom:5px; }
+  .roi-protect .rp-value{ font-family:var(--mono); font-size:34px; font-weight:800; color:var(--green); text-shadow:0 0 24px #00c96a66; }
+  .roi-protect .rp-note{ font-size:12.5px; color:var(--ice); margin-top:4px; }
+
+  /* ===================== CONTACT ===================== */
+  .contact-slide{ text-align:center; }
+  .contact-cards{ display:flex; flex-direction:column; gap:10px; margin-top:21px; }
+  .contact-card{ background:var(--card); border:1px solid var(--border); border-radius:13px; padding:14px 18px; text-align:left; }
+  .contact-card .k{ font-family:var(--mono); font-size:10.5px; color:var(--muted); margin-bottom:5px; }
+  .contact-card .v{ font-size:13.5px; font-weight:600; }
+  .footer-line{ position:absolute; bottom:26px; left:0; right:0; text-align:center; font-family:var(--mono); font-size:10px; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<!--
+  ============================================================================
+  แก้ไขข้อความ/ตัวเลขทั้งหมดของเว็บนี้ได้ที่ JSON ในแท็ก <script id="sv-data">
+  ด้านล่าง — ไม่ต้องแตะ HTML/CSS/JS ส่วนอื่น แก้เสร็จแล้ว save แล้วเปิดไฟล์ใหม่ได้เลย
+  ⚠️ ข้อควรระวัง 1: JSON ห้ามมี comma (,) ห้อยท้ายก่อนปิด } หรือ ] เด็ดขาด
+  ⚠️ ข้อควรระวัง 2: ถ้าจะลบสไลด์ทั้งอัน ต้องลบให้ครบ 3 จุด ไม่ใช่แค่ตรงนี้:
+     1) ก้อนข้อมูลใน JSON นี้   2) <section>...</section> ในหน้า HTML
+     3) บรรทัด document.getElementById(...) ใน <script> ท้ายไฟล์ที่อ้างถึงสไลด์นั้น
+     ถ้าลบไม่ครบ 3 จุด สคริปต์จะ error กลางทางและทำให้ทั้งหน้าใช้งานไม่ได้
+  ============================================================================
+-->
+<script id="sv-data" type="application/json">
+{
+  "footer": "peapattani.github.io/safevoice · SafeVoice © 2026",
+  "topbarBadge": "PEA Innovation Contest 2026",
+
+  "hero": {
+    "eventBadge": "🏆 ผ่านรอบพิตช์ · PEA Innovation Contest (S3) 2026 — Internal Innovation (Process)",
+    "tagline": "ทุกรายงานคือการป้องกันอุบัติเหตุ",
+    "sub": "ระบบรายงานเหตุเกือบเกิดอุบัติเหตุ (Near Miss) ด้วยเสียง ให้การรายงานง่ายเท่าการพูด และให้ความปลอดภัยมีแรงจูงใจที่จับต้องได้",
+    "team": "⚡ การไฟฟ้าส่วนภูมิภาคจังหวัดปัตตานี · โดยทีม <b>กลุ่มคนไม่ใช่หุ่นยนต์ 2</b>",
+    "stats": [
+      { "value": "106", "label": "พนักงาน" },
+      { "value": "6", "label": "สาขา" },
+      { "value": "", "label": "Live บน GitHub Pages" },
+      { "value": "", "label": "วิเคราะห์รายงานด้วย Claude AI" }
+    ]
+  },
+
+  "problem": {
+    "eyebrow": "จุดเริ่มต้น",
+    "heading": "อุบัติเหตุร้ายแรง 1 ครั้ง ไม่ได้เกิดขึ้นแบบไม่มีสัญญาณเตือน",
+    "lead": "ทฤษฎีสามเหลี่ยมของ Heinrich (300:1) ชี้ว่า 1 อุบัติเหตุร้ายแรง จะมี 29 อุบัติเหตุย่อย และ 300 เหตุการณ์เฉียดอุบัติเหตุ (Near Miss) ซ่อนอยู่เป็นฐานราก",
+    "triangleCaption": "เป้าหมายของเรา: หยุด 1 อุบัติเหตุใหญ่ ด้วยการมองเห็น 300 Near Misses ให้ได้"
+  },
+
+  "problemCulture": {
+    "eyebrow": "สถานการณ์จริง",
+    "heading": "ปัญหาปัจจุบัน: วัฒนธรรมการซ่อนความเสี่ยง",
+    "lawBadge": "⚖️ มาตรการความปลอดภัย หลักเกณฑ์กระทำความผิด พ.ศ. 2568/2569 กำหนดบทลงโทษที่เข้มงวด — หักคะแนนประเมิน เลิกจ้างหากได้ใบเตือนครบ 3 ครั้ง",
+    "chain": [
+      { "icon": "⚖️", "text": "กฎระเบียบ & บทลงโทษที่รุนแรง" },
+      { "icon": "🧍", "text": "พนักงานเกิดความกลัวผลกระทบต่อหน้าที่การงาน" },
+      { "icon": "🙈", "text": "การปกปิดข้อมูล Near Miss แทนที่จะรายงาน" },
+      { "icon": "🏭", "text": "จป. ขาดข้อมูลเชิงรุก / เกิดอุบัติเหตุซ้ำซาก", "danger": true }
+    ],
+    "limitsLabel": "ข้อจำกัดเดิม:",
+    "limits": ["ระบบรายงานกระดาษล่าช้า", "ข้อมูลสูญหายระหว่างทาง", "ผู้บริหารไม่เห็นภาพรวม"]
+  },
+
+  "objectives": {
+    "eyebrow": "เป้าหมาย",
+    "heading": "พลิกมุมมอง: เปลี่ยนความกลัว เป็นแรงจูงใจ",
+    "lead": "วัตถุประสงค์หลัก 4 ประการของนวัตกรรม SafeVoice",
+    "items": [
+      { "icon": "🎙", "title": "1. รายงานง่ายและรวดเร็ว", "body": "ใช้เทคโนโลยี Speech-to-Text เพียงอัดเสียง ลดภาระการพิมพ์ขณะปฏิบัติงาน" },
+      { "icon": "🧠", "title": "2. วิเคราะห์แม่นยำด้วย AI", "body": "ระบบจัดระดับความเสี่ยงอัตโนมัติ พร้อมเสนอแนวทางแก้ไขทันที" },
+      { "icon": "🛡️", "title": "3. เปลี่ยนการซ่อนเป็นการรายงาน", "body": "สร้างระบบ Safety Credits สะสมคะแนนเพื่อใช้สิทธิ์หักล้างใบเตือน" },
+      { "icon": "📈", "title": "4. ข้อมูล Real-time", "body": "Dashboard อัจฉริยะสำหรับผู้บริหารและ จป. เพื่อวิเคราะห์ Hotspot เชิงรุก" }
+    ]
+  },
+
+  "comparison": {
+    "eyebrow": "การเปลี่ยนผ่าน",
+    "heading": "วิวัฒนาการสู่ SafeVoice",
+    "headDim": "มิติการทำงาน",
+    "headOld": "ระบบเดิม (กระดาษ/ฟอร์ม)",
+    "headNew": "SafeVoice (AI)",
+    "rows": [
+      { "dim": "วิธีการนำเข้าข้อมูล", "old": "เขียนมือ / พิมพ์ลงฟอร์ม (30 นาที)", "new": "พูดด้วยเสียงผ่านมือถือ (ไม่เกิน 30 วินาที) หรือพิมพ์ข้อความ" },
+      { "dim": "การวิเคราะห์ความเสี่ยง", "old": "จป. ต้องนำมาอ่านและวิเคราะห์เองทีละแผ่น", "new": "AI จำแนกความเสี่ยงและแนะนำ Action ทันที" },
+      { "dim": "แรงจูงใจพนักงาน", "old": "กลัวการถูกเพ่งเล็งหรือลงโทษ รายงานแล้วไม่มีผลอะไรกลับมา", "new": "ได้รับ Safety Credits เป็นแรงจูงใจเชิงบวก" },
+      { "dim": "สถานะข้อมูล", "old": "ล่าช้า สูญหายง่าย", "new": "รวบรวมเป็น Real-time Dashboard" }
+    ]
+  },
+
+  "product": {
+    "eyebrow": "ตัวระบบจริง",
+    "heading": "ไม่ใช่แค่ไอเดีย — ใช้งานได้จริงวันนี้",
+    "lead": "หน้าตาและสีสันด้านล่างคือของจริงจากระบบ ไม่ใช่ mockup ที่สร้างขึ้นใหม่",
+    "aiResultLabel": "ผลวิเคราะห์จาก AI Engine (Claude)",
+    "aiResult": "ความเสี่ยง: อุปกรณ์ชำรุด (ระดับกลาง) — Credits ปรับจาก 50 → 13 (×0.25) เพราะรายงานสั้นเกินไป ขาด action",
+    "verifyTitle": "// แอดมิน — ยืนยันรายงาน Near Miss",
+    "verifyRows": [
+      { "label": "NM-108 · หนองจิก", "badge": "pending", "badgeText": "รอตรวจสอบ" },
+      { "label": "NM-107 · ยะรัง", "badge": "high", "badgeText": "เสี่ยงสูง" },
+      { "label": "NM-106 · แม่ลาน", "badge": "verified", "badgeText": "ยืนยันแล้ว" }
+    ],
+    "leaderboardTitle": "🏅 Leaderboard — Credits สะสม",
+    "leaderboard": [
+      { "rank": 1, "name": "อับดุลบารี ส.", "credit": "+320" },
+      { "rank": 2, "name": "ธนบัตร น.", "credit": "+275" },
+      { "rank": 3, "name": "วิริยะ ร.", "credit": "+240" }
+    ]
+  },
+
+  "demo": {
+    "eyebrow": "ดูของจริง",
+    "heading": "สาธิตการใช้งาน SafeVoice",
+    "lead": "ขั้นตอนการใช้งานจริง ตั้งแต่พูดรายงาน จนถึงได้ Safety Credit ใน 2:50 นาที",
+    "videoId": "udLgLwfFgoE",
+    "videoTitle": "SafeVoice — สาธิตการใช้งาน",
+    "linkLabel": "🔗 เปิดดูใน YouTube"
+  },
+
+  "creditsOffset": {
+    "eyebrow": "นวัตกรรมเชิงพฤติกรรม",
+    "heading": "กลไก Safety Credits Offset",
+    "lead": "เปลี่ยนความผิดพลาดให้เป็นการสร้างคุณค่า ด้วย Incentive Design",
+    "tiers": [
+      { "level": "Low Risk", "tone": "green", "credit": "+20 แต้ม", "note": "ความเสี่ยงต่ำ" },
+      { "level": "Medium Risk", "tone": "amber", "credit": "+50 แต้ม", "note": "พร้อมข้อเสนอแนะ" },
+      { "level": "High Risk", "tone": "red", "credit": "+100 แต้ม", "note": "ป้องกันอุบัติเหตุใหญ่" }
+    ],
+    "banner": "สะสมครบ 300 Credits หักล้างผลกระทบใบเตือนได้ 1 ใบ หรือสะสมคะแนนรับรางวัลประจำปี"
+  },
+
+  "trial": {
+    "eyebrow": "ข้อมูลจริง",
+    "heading": "ผลการทดสอบใช้งานจริง (Prototype Trial)",
+    "lead": "ทดสอบกับพนักงานช่าง 12 คน จำนวน 27 กรณีศึกษา",
+    "rows": [
+      { "label": "ความแม่นยำของการแปลงเสียง (Speech-to-Text)", "value": "> 90%" },
+      { "label": "ความถูกต้องของการวิเคราะห์ความเสี่ยง (AI Analysis)", "value": "88%" },
+      { "label": "การตอบสนองระบบ Safety Credits (เข้าบัญชีทันที)", "value": "100% Success" },
+      { "label": "Verification Flow โดย จป. แจ้งเตือนภายใน 48 ชม.", "value": "ผ่านทุกกรณี" },
+      { "label": "ความเสถียรของ UI บนทุกหน้าจอ (PC & Mobile)", "value": "Seamless" }
+    ]
+  },
+
+  "reactive": {
+    "eyebrow": "ผลลัพธ์เชิงวัฒนธรรม",
+    "heading": "สู่การเป็น Proactive Organization",
+    "reactiveTitle": "Reactive (เชิงรับ)",
+    "reactiveBody": "รอรับรายงาน / ปกปิดข้อมูล / เน้นลงโทษ",
+    "proactiveTitle": "Proactive (เชิงรุก)",
+    "proactiveBody": "มองหาและรายงานความเสี่ยง / จป. ทำงานเชิงป้องกัน",
+    "groups": [
+      { "title": "พนักงาน", "body": "เปลี่ยนจาก 'ซ่อน' เป็น 'รายงาน' ด้วยแรงจูงใจเชิงบวก รู้สึกได้รับโอกาส" },
+      { "title": "เจ้าหน้าที่ความปลอดภัย (จป.)", "body": "โฟกัสเฉพาะ High Risk Cases ที่ AI คัดกรองให้ (Pre-screen)" },
+      { "title": "องค์กร กฟภ.", "body": "สร้างฐานข้อมูลที่แท้จริง สอดคล้องกับทิศทาง Digital Transformation" }
+    ]
+  },
+
+  "roi": {
+    "eyebrow": "ผลลัพธ์ด้านการเงิน",
+    "heading": "Micro-Cost for Macro-Protection",
+    "costLabel": "ต้นทุนการพัฒนาระบบ",
+    "costValue": "2,500 ฿ / ปี",
+    "costNote": "ประหยัดกว่าระบบเชิงพาณิชย์ที่ราคา 500k–1M ถึง >99%",
+    "protectLabel": "มูลค่าที่ปกป้องได้",
+    "protectValue": "500,000+ ฿",
+    "protectNote": "ต่อการป้องกัน 1 อุบัติเหตุ",
+    "banner": "ความคุ้มค่า (ROI): หาก SafeVoice ช่วยป้องกันอุบัติเหตุใหญ่ได้เพียง 1 ครั้ง ผลตอบแทนการลงทุนจะสูงถึง 200 - 500 เท่า"
+  },
+
+  "contact": {
+    "eyebrow": "พร้อมให้ทุกเสียงมีความหมาย",
+    "heading": "ทุกรายงานคือการป้องกันอุบัติเหตุ",
+    "lead": "SafeVoice ไม่ใช่แค่ซอฟต์แวร์ แต่คือนวัตกรรมที่เปลี่ยนความกลัว ให้เป็นข้อมูลความปลอดภัย และเปลี่ยนวัฒนธรรมการซ่อน ให้เป็นวัฒนธรรมการแบ่งปัน อย่างยั่งยืน",
+    "cards": [
+      { "label": "ผู้พัฒนา", "value": "กลุ่มคนไม่ใช่หุ่นยนต์ 2" },
+      { "label": "ติดต่อเจ้าหน้าที่ความปลอดภัย", "value": "นายวิริยะ รุ่งเรือง (จป.ว.7)" },
+      { "label": "หน่วยงาน", "value": "การไฟฟ้าส่วนภูมิภาคจังหวัดปัตตานี" }
+    ]
+  }
+}
+</script>
+
+<div class="topbar" id="topbar">
+  <div class="topbar-logo"><span class="logo-icon">🛡️</span> SafeVoice</div>
+  <div class="topbar-badge" data-key="topbarBadge"></div>
+</div>
+
+<nav class="dotnav" id="dotnav"></nav>
+
+<div id="slides">
+
+  <section class="slide hero" id="hero" data-label="เริ่มต้น">
+    <div class="wrap">
+      <div class="hero-badge" data-key="hero.eventBadge"></div>
+      <div class="hero-logo"><span class="logo-icon">🛡️</span></div>
+      <h1>SafeVoice</h1>
+      <div class="tagline" data-key="hero.tagline"></div>
+      <p class="sub" data-key="hero.sub"></p>
+      <p class="hero-team" data-key-html="hero.team"></p>
+      <div class="hero-stats" id="hero-stats"></div>
+    </div>
+  </section>
+
+  <section class="slide" id="problem" data-label="ปัญหา">
+    <div class="wrap">
+      <div class="eyebrow" data-key="problem.eyebrow"></div>
+      <h2 data-key="problem.heading"></h2>
+      <p class="lead" data-key="problem.lead"></p>
+      <div class="triangle-solo">
+        <div class="triangle-wrap fade-up">
+          <svg viewBox="0 0 320 260" width="100%" style="max-width:210px">
+            <polygon points="160,10 211.7,95 108.3,95" fill="#ef444422" stroke="#EF4444" stroke-width="1.5"/>
+            <text x="160" y="58" text-anchor="middle" fill="#EF4444" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">1</text>
+            <text x="160" y="80" text-anchor="middle" fill="#ff9999" font-family="Sarabun" font-size="10">อุบัติเหตุร้ายแรง</text>
+            <polygon points="108.3,95 211.7,95 257.4,170 62.6,170" fill="#f59e0b22" stroke="#F59E0B" stroke-width="1.5"/>
+            <text x="160" y="122" text-anchor="middle" fill="#F59E0B" font-family="JetBrains Mono, monospace" font-size="14" font-weight="700">29</text>
+            <text x="160" y="146" text-anchor="middle" fill="#ffc97a" font-family="Sarabun" font-size="10">อุบัติเหตุย่อย</text>
+            <polygon points="62.6,170 257.4,170 300,240 20,240" fill="#00c96a22" stroke="#00C96A" stroke-width="1.5"/>
+            <text x="160" y="196" text-anchor="middle" fill="#00C96A" font-family="JetBrains Mono, monospace" font-size="18" font-weight="700">300</text>
+            <text x="160" y="216" text-anchor="middle" fill="#7ACF9A" font-family="Sarabun" font-size="11">เหตุเฉียดอุบัติเหตุ</text>
+            <text x="160" y="232" text-anchor="middle" fill="#7ACF9A" font-family="Sarabun" font-size="11">(Near Miss)</text>
+          </svg>
+          <div class="triangle-cap" data-key="problem.triangleCaption"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="problem-culture" style="background:var(--dark)" data-label="วัฒนธรรมองค์กร">
+    <div class="wrap">
+      <div class="eyebrow" data-key="problemCulture.eyebrow"></div>
+      <h2 data-key="problemCulture.heading"></h2>
+      <div class="callout callout-red fade-up" data-key="problemCulture.lawBadge"></div>
+      <div class="chain-list fade-up" id="chain-list"></div>
+      <div style="text-align:center; margin-top:11px;">
+        <span class="eyebrow" style="justify-content:center; margin-bottom:6px;" data-key="problemCulture.limitsLabel"></span>
+        <div class="limits-row" id="limits-row"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="objectives" data-label="เป้าหมาย">
+    <div class="wrap">
+      <div class="eyebrow" data-key="objectives.eyebrow"></div>
+      <h2 data-key="objectives.heading"></h2>
+      <p class="lead" data-key="objectives.lead"></p>
+      <div class="obj-grid fade-up" id="obj-grid"></div>
+    </div>
+  </section>
+
+  <section class="slide" id="comparison" style="background:var(--dark)" data-label="เปรียบเทียบ">
+    <div class="wrap">
+      <div class="eyebrow" data-key="comparison.eyebrow"></div>
+      <h2 data-key="comparison.heading"></h2>
+      <div class="cmp-table fade-up" id="cmp-table"></div>
+    </div>
+  </section>
+
+  <section class="slide" id="product" data-label="ตัวระบบจริง">
+    <div class="wrap">
+      <div class="eyebrow" data-key="product.eyebrow"></div>
+      <h2 data-key="product.heading"></h2>
+      <p class="lead" data-key="product.lead"></p>
+      <div class="mock-grid">
+        <div class="phone fade-up">
+          <div class="phone-screen">
+            <div class="phone-head">🛡️ รายงาน Near Miss</div>
+            <div class="mode-tabs">
+              <div class="mode-tab active">🎙 บันทึกเสียง</div>
+              <div class="mode-tab">พิมพ์ข้อความ</div>
+            </div>
+            <div class="record-btn">🎙</div>
+            <div class="waveform"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="phone-note">แตะไมค์แล้วเล่าเหตุการณ์ได้เลย</div>
+            <div class="photo-req">* แนบรูปถ่ายประกอบ บังคับทุกรายงาน</div>
+            <div class="result-card">
+              <b data-key="product.aiResultLabel"></b>
+              <span data-key="product.aiResult"></span>
+            </div>
+          </div>
+        </div>
+        <div class="admin-mock fade-up">
+          <h4 data-key="product.verifyTitle"></h4>
+          <div id="product-verify"></div>
+          <h4 style="margin-top:14px" data-key="product.leaderboardTitle"></h4>
+          <div id="product-leaderboard"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="demo" style="background:var(--dark)" data-label="วิดีโอสาธิต">
+    <div class="wrap" style="text-align:center">
+      <div class="eyebrow" style="justify-content:center" data-key="demo.eyebrow"></div>
+      <h2 data-key="demo.heading"></h2>
+      <p class="lead" data-key="demo.lead"></p>
+      <div class="video-frame fade-up">
+        <iframe id="demo-iframe" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <a class="video-link" id="demo-link" target="_blank" rel="noopener"></a>
+    </div>
+  </section>
+
+  <section class="slide" id="credits" data-label="Safety Credits">
+    <div class="wrap">
+      <div class="eyebrow" data-key="creditsOffset.eyebrow"></div>
+      <h2 data-key="creditsOffset.heading"></h2>
+      <p class="lead" data-key="creditsOffset.lead"></p>
+      <div class="tier-grid fade-up" id="tier-grid"></div>
+      <div class="offset-banner fade-up" data-key="creditsOffset.banner"></div>
+    </div>
+  </section>
+
+  <section class="slide" id="trial" style="background:var(--dark)" data-label="ผลทดสอบ">
+    <div class="wrap">
+      <div class="eyebrow" data-key="trial.eyebrow"></div>
+      <h2 data-key="trial.heading"></h2>
+      <p class="lead" data-key="trial.lead"></p>
+      <div class="check-list fade-up" id="check-list"></div>
+    </div>
+  </section>
+
+  <section class="slide" id="reactive" data-label="Proactive Org">
+    <div class="wrap">
+      <div class="eyebrow" data-key="reactive.eyebrow"></div>
+      <h2 data-key="reactive.heading"></h2>
+      <div class="rp-row fade-up">
+        <div class="rp-box reactive">
+          <div class="rp-title" data-key="reactive.reactiveTitle"></div>
+          <p data-key="reactive.reactiveBody"></p>
+        </div>
+        <div class="rp-arrow">➜</div>
+        <div class="rp-box proactive">
+          <div class="rp-title" data-key="reactive.proactiveTitle"></div>
+          <p data-key="reactive.proactiveBody"></p>
+        </div>
+      </div>
+      <div class="rp-groups fade-up" id="rp-groups"></div>
+    </div>
+  </section>
+
+  <section class="slide" id="roi" style="background:var(--dark)" data-label="ผลตอบแทน">
+    <div class="wrap">
+      <div class="eyebrow" data-key="roi.eyebrow"></div>
+      <h2 data-key="roi.heading"></h2>
+      <div class="roi-grid fade-up">
+        <div class="roi-cost">
+          <div class="rc-label" data-key="roi.costLabel"></div>
+          <div class="rc-value" data-key="roi.costValue"></div>
+          <div class="rc-note" data-key="roi.costNote"></div>
+        </div>
+        <div class="roi-protect">
+          <div class="rp-label" data-key="roi.protectLabel"></div>
+          <div class="rp-value" data-key="roi.protectValue"></div>
+          <div class="rp-note" data-key="roi.protectNote"></div>
+        </div>
+      </div>
+      <div class="callout callout-purple fade-up" data-key="roi.banner" style="margin-top:14px; justify-content:center; text-align:center;"></div>
+    </div>
+  </section>
+
+  <section class="slide contact-slide" id="contact" data-label="ติดต่อ">
+    <div class="wrap">
+      <div class="eyebrow" style="justify-content:center" data-key="contact.eyebrow"></div>
+      <h2 data-key="contact.heading"></h2>
+      <p class="lead" data-key="contact.lead"></p>
+      <div class="contact-cards fade-up" id="contact-cards"></div>
+    </div>
+    <div class="footer-line" data-key="footer"></div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  const DATA = JSON.parse(document.getElementById('sv-data').textContent);
+  const get = (obj, path) => path.split('.').reduce((o,k)=> (o||{})[k], obj);
+
+  document.querySelectorAll('[data-key]').forEach(el=>{
+    const val = get(DATA, el.getAttribute('data-key'));
+    if(val !== undefined) el.textContent = val;
+  });
+  document.querySelectorAll('[data-key-html]').forEach(el=>{
+    const val = get(DATA, el.getAttribute('data-key-html'));
+    if(val !== undefined) el.innerHTML = val;
+  });
+
+  document.getElementById('hero-stats').innerHTML = DATA.hero.stats.map(s=>
+    `<div class="pill">${s.value ? `<b>${s.value}</b> ` : ''}${s.label}</div>`
+  ).join('');
+
+  document.getElementById('chain-list').innerHTML = DATA.problemCulture.chain.map((c,i)=>
+    (i>0 ? '<div class="chain-arrow">▼</div>' : '') +
+    `<div class="chain-item${c.danger?' danger':''}"><span class="ci-icon">${c.icon}</span><span>${c.text}</span></div>`
+  ).join('');
+  document.getElementById('limits-row').innerHTML = DATA.problemCulture.limits.map(l=>`<div class="chip">${l}</div>`).join('');
+
+  document.getElementById('obj-grid').innerHTML = DATA.objectives.items.map(o=>
+    `<div class="obj-card"><span class="oi">${o.icon}</span><h4>${o.title}</h4><p>${o.body}</p></div>`
+  ).join('');
+
+  document.getElementById('cmp-table').innerHTML =
+    `<div class="cmp-row head"><div class="cmp-cell dim">${DATA.comparison.headDim}</div><div class="cmp-cell old">${DATA.comparison.headOld}</div><div class="cmp-cell new" style="background:var(--dark)">${DATA.comparison.headNew}</div></div>` +
+    DATA.comparison.rows.map(r=>
+      `<div class="cmp-row"><div class="cmp-cell dim">${r.dim}</div><div class="cmp-cell old">${r.old}</div><div class="cmp-cell new">${r.new}</div></div>`
+    ).join('');
+
+  document.getElementById('product-verify').innerHTML = DATA.product.verifyRows.map(r=>
+    `<div class="verify-row"><span>${r.label}</span><span class="badge badge-${r.badge}">${r.badgeText}</span></div>`
+  ).join('');
+  document.getElementById('product-leaderboard').innerHTML = DATA.product.leaderboard.map(r=>
+    `<div class="lb-row"><span class="lb-rank">${r.rank}</span><span class="lb-name">${r.name}</span><span class="lb-credit">${r.credit}</span></div>`
+  ).join('');
+
+  const demoIframe = document.getElementById('demo-iframe');
+  demoIframe.src = `https://www.youtube.com/embed/${DATA.demo.videoId}`;
+  demoIframe.title = DATA.demo.videoTitle;
+  const demoLink = document.getElementById('demo-link');
+  demoLink.href = `https://youtube.com/shorts/${DATA.demo.videoId}`;
+  demoLink.textContent = DATA.demo.linkLabel;
+
+  document.getElementById('tier-grid').innerHTML = DATA.creditsOffset.tiers.map(t=>
+    `<div class="tier-card t-${t.tone}"><div><div class="t-level">${t.level}</div><div class="t-note">${t.note}</div></div><div class="t-credit">${t.credit}</div></div>`
+  ).join('');
+
+  document.getElementById('check-list').innerHTML = DATA.trial.rows.map(r=>
+    `<div class="check-row"><span class="cr-label">${r.label}</span><span class="cr-value">${r.value}</span></div>`
+  ).join('');
+
+  document.getElementById('rp-groups').innerHTML = DATA.reactive.groups.map(g=>
+    `<div class="rp-group"><h4>${g.title}</h4><p>${g.body}</p></div>`
+  ).join('');
+
+  document.getElementById('contact-cards').innerHTML = DATA.contact.cards.map(c=>
+    `<div class="contact-card"><div class="k">${c.label}</div><div class="v">${c.value}</div></div>`
+  ).join('');
+
+  const slidesEl = document.getElementById('slides');
+  const slides = [...document.querySelectorAll('.slide')];
+  const dotnav = document.getElementById('dotnav');
+
+  slides.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.setAttribute('aria-label', s.dataset.label);
+    b.addEventListener('click', ()=> goTo(i));
+    dotnav.appendChild(b);
+  });
+  const dots = [...dotnav.children];
+
+  let current = 0;
+  function updateActive(i){
+    current = i;
+    dots.forEach((d,j)=> d.classList.toggle('active', j===i));
+  }
+  function goTo(i){
+    i = Math.max(0, Math.min(slides.length-1, i));
+    slides[i].scrollIntoView({ behavior:'smooth' });
+  }
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx = slides.indexOf(e.target);
+        updateActive(idx);
+        e.target.querySelectorAll('.fade-up').forEach(el=> el.classList.add('in'));
+      }
+    });
+  }, { root: slidesEl, threshold: 0.55 });
+  slides.forEach(s=> io.observe(s));
+  updateActive(0);
+})();
+</script>
+
+</body>
+</html>
